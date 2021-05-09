@@ -11,7 +11,7 @@ object GenresHelper {
             if (it.name.isBlank()) "-" else it.name
         }
         for (genre in genreMap) {
-            if (separator) listGenreMovie.append("/")
+            if (separator) listGenreMovie.append("\n")
             separator = true
             listGenreMovie.append(genre)
         }
@@ -25,7 +25,7 @@ object GenresHelper {
             if (it.name.isBlank()) "-" else it.name
         }
         for (genre in genreMap) {
-            if (separator) listGenreTvShow.append("/")
+            if (separator) listGenreTvShow.append("\n")
             separator = true
             listGenreTvShow.append(genre)
         }

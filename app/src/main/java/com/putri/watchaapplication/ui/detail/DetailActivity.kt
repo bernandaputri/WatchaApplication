@@ -38,16 +38,21 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
         if (extras != null) {
             val mediaId = extras.getInt("id", 0)
             if (mediaId != null) {
+                binding.progressBar.visibility = View.VISIBLE
                 when (intent.getStringExtra(EXTRA_TYPE)) {
                     "movie" -> {
                         viewModel.selectedMovie(mediaId)
 //                        result = viewModel.getDetailMovie()
-                        viewModel.getDetailMovie().observe(this, { detail -> populateDetail(detail) })
+                        viewModel.getDetailMovie().observe(this, { detail ->
+                            binding.progressBar.visibility = View.GONE
+                            populateDetail(detail) })
                     }
                     "tvShow" -> {
                         viewModel.selectedTvShow(mediaId)
 //                        result = viewModel.getDetailTvShow()
-                        viewModel.getDetailTvShow().observe(this, { detail -> populateDetail(detail) })
+                        viewModel.getDetailTvShow().observe(this, { detail ->
+                            binding.progressBar.visibility = View.GONE
+                            populateDetail(detail) })
                     }
                 }
             }

@@ -84,7 +84,7 @@ class WatchaRepository private constructor(private val remoteDataSource: RemoteD
                             detailMovie.posterPath,
                             detailMovie.overview,
                             detailMovie.releaseDate,
-                            genreMovie(detailMovie).toString(),
+                            genreMovie(detailMovie).toString()
                     )
                     dataDetailMovie.postValue(theDetailMovie)
                 }
