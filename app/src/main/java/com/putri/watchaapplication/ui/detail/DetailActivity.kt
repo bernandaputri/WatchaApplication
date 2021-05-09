@@ -92,7 +92,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
             collapseToolbar.title = result.mediaTitle
 
             Glide.with(this@DetailActivity)
-                    .load(result.mediaPoster)
+                    .load("https://image.tmdb.org/t/p/w500" + result.mediaPoster)
                     .into(imgMedia)
 
             tvOverview.text = result.mediaDesc
