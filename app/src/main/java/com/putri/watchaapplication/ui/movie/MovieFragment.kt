@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.putri.watchaapplication.R
 import com.putri.watchaapplication.databinding.FragmentMovieBinding
 import com.putri.watchaapplication.viewmodel.ViewModelFactory
 

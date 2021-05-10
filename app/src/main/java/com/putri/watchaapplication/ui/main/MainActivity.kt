@@ -2,7 +2,6 @@ package com.putri.watchaapplication.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.putri.watchaapplication.R
 import com.putri.watchaapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

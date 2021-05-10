@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.putri.watchaapplication.R
 import com.putri.watchaapplication.data.entity.DetailMediaEntity
-import com.putri.watchaapplication.data.entity.MediaEntity
 import com.putri.watchaapplication.databinding.ActivityDetailBinding
 import com.putri.watchaapplication.viewmodel.ViewModelFactory
 
@@ -19,7 +18,6 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private lateinit var binding: ActivityDetailBinding
-//    private lateinit var result: DetailMediaEntity
     private var isAdd = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,14 +40,12 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                 when (intent.getStringExtra(EXTRA_TYPE)) {
                     "movie" -> {
                         viewModel.selectedMovie(mediaId)
-//                        result = viewModel.getDetailMovie()
                         viewModel.getDetailMovie().observe(this, { detail ->
                             binding.progressBar.visibility = View.GONE
                             populateDetail(detail) })
                     }
                     "tvShow" -> {
                         viewModel.selectedTvShow(mediaId)
-//                        result = viewModel.getDetailTvShow()
                         viewModel.getDetailTvShow().observe(this, { detail ->
                             binding.progressBar.visibility = View.GONE
                             populateDetail(detail) })
@@ -57,36 +53,6 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-
-//        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
-//
-//        val viewModelFactory = ViewModelFactory.getInstance(this)
-//        val viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
-//
-//        val mediaId = intent.getStringExtra(EXTRA_DATA)
-//
-//        when (intent.getStringExtra(EXTRA_TYPE)) {
-//            "movie" -> {
-//                mediaId?.let { viewModel.selectedMovie(mediaId) }
-//                result = viewModel.getDetailMovie()
-//            }
-//            "tvShow" -> {
-//                mediaId?.let { viewModel.selectedTvShow(it) }
-//                result = viewModel.getDetailTvShow()
-//            }
-//        }
-//
-//        with(binding) {
-//            collapseToolbar.title = result.mediaTitle
-//
-//            Glide.with(this@DetailActivity)
-//                .load(result.mediaPoster)
-//                .into(imgMedia)
-//
-//            tvOverview.text = result.mediaDesc
-//            tvGenre.text = result.mediaGenres
-//            tvDate.text = result.mediaRelease
-//        }
 
         binding.btnSave.setOnClickListener(this)
         binding.btnShareMedia.setOnClickListener(this)

@@ -1,19 +1,17 @@
 package com.putri.watchaapplication.utils
 
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
 object EspressoIdlingResource {
     private const val RESOURCE = "GLOBAL"
-    private val espressoTestIdlingResource = CountingIdlingResource(RESOURCE)
+    private val espressoIdlingResource = CountingIdlingResource(RESOURCE)
 
     fun increment() {
-        espressoTestIdlingResource.increment()
+        espressoIdlingResource.increment()
     }
 
     fun decrement() {
-        espressoTestIdlingResource.decrement()
+        espressoIdlingResource.decrement()
     }
 
-    fun getEspressoIdlingResourceForMainActivity(): IdlingResource = espressoTestIdlingResource
 }
