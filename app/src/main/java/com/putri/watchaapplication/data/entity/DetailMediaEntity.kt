@@ -5,6 +5,6 @@ data class DetailMediaEntity(
         var mediaTitle: String?,
         var mediaPoster: String?,
         var mediaDesc: String?,
-        var mediaRelease: String,
+        var mediaRelease: String?,
         var mediaGenres: String?
 )
