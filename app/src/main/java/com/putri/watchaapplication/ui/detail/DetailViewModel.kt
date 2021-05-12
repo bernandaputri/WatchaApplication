@@ -7,18 +7,20 @@ import com.putri.watchaapplication.data.entity.DetailMediaEntity
 
 class DetailViewModel (private val movieRepository: WatchaRepository) : ViewModel() {
 
-    private var mediaId: Int? = 0
+    private var movieId: Int? = 0
 
     fun selectedMovie(movieId: Int) {
-        this.mediaId = movieId
+        this.movieId = movieId
     }
 
-    fun getDetailMovie() : LiveData<DetailMediaEntity> = movieRepository.getDetailMovie(mediaId as Int)
+    fun getDetailMovie() : LiveData<DetailMediaEntity> = movieRepository.getDetailMovie(movieId as Int)
+
+    private var showId: Int? = 0
 
     fun selectedTvShow(showId: Int) {
-        this.mediaId = showId
+        this.showId = showId
     }
 
-    fun getDetailTvShow() : LiveData<DetailMediaEntity> = movieRepository.getDetailTvShow(mediaId as Int)
+    fun getDetailTvShow() : LiveData<DetailMediaEntity> = movieRepository.getDetailTvShow(showId as Int)
 
 }
