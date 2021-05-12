@@ -9,16 +9,16 @@ class DetailViewModel (private val movieRepository: WatchaRepository) : ViewMode
 
     private var mediaId: Int? = 0
 
-    fun selectedMovie(mediaId: Int) {
-        this.mediaId = mediaId
+    fun selectedMovie(movieId: Int) {
+        this.mediaId = movieId
     }
 
-    fun getDetailMovie() : LiveData<DetailMediaEntity> = mediaId?.let { movieRepository.getDetailMovie(it) } as LiveData<DetailMediaEntity>
+    fun getDetailMovie() : LiveData<DetailMediaEntity> = movieRepository.getDetailMovie(mediaId as Int)
 
-    fun selectedTvShow(mediaId: Int) {
-        this.mediaId = mediaId
+    fun selectedTvShow(showId: Int) {
+        this.mediaId = showId
     }
 
-    fun getDetailTvShow() : LiveData<DetailMediaEntity> = mediaId?.let { movieRepository.getDetailTvShow(it) } as LiveData<DetailMediaEntity>
+    fun getDetailTvShow() : LiveData<DetailMediaEntity> = movieRepository.getDetailTvShow(mediaId as Int)
 
 }

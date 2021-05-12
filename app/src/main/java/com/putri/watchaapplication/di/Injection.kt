@@ -5,7 +5,7 @@ import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.data.remote.RemoteDataSource
 
 object Injection {
-    fun provideRepository(context: Context): WatchaRepository {
+    fun provideRepository(): WatchaRepository {
 
         val remoteDataSource = RemoteDataSource()
 

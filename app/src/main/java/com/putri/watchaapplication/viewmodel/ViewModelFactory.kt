@@ -16,9 +16,7 @@ class ViewModelFactory private constructor(private val mWatchaRepository: Watcha
 
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository(context)).apply {
-                    instance = this
-                }
+                instance ?: ViewModelFactory(Injection.provideRepository())
             }
     }
 

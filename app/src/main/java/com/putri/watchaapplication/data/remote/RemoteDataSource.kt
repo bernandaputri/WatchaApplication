@@ -1,9 +1,13 @@
 package com.putri.watchaapplication.data.remote
 
 import android.util.Log
+import com.putri.watchaapplication.data.entity.MediaEntity
 import com.putri.watchaapplication.data.remote.response.*
 import com.putri.watchaapplication.network.ApiConfig
+import com.putri.watchaapplication.network.ApiService
 import com.putri.watchaapplication.utils.EspressoIdlingResource
+import com.putri.watchaapplication.utils.EspressoIdlingResource.decrement
+import com.putri.watchaapplication.utils.EspressoIdlingResource.increment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,30 +15,41 @@ import retrofit2.Response
 class RemoteDataSource {
 
     companion object {
-        private const val TAG = "RemoteDataSource"
+
+        @Volatile
+        private var instance: RemoteDataSource? = null
+
+        fun getInstance(): RemoteDataSource = instance ?: synchronized(this) {
+            instance ?: RemoteDataSource()
+        }
+
+        private val TAG = RemoteDataSource::class.java.simpleName
     }
 
     fun getPopularMovie(callback: LoadPopularMovie) {
-        EspressoIdlingResource.increment()
+        increment()
 
         val client = ApiConfig.getApiService().getMovie()
         client.enqueue(object : Callback<MovieResponse> {
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+            override fun onResponse(
+                    call: Call<MovieResponse>,
+                    response: Response<MovieResponse>
+            ) {
                 if (response.isSuccessful) {
                     callback.popularMovie(response.body()?.results)
-                    EspressoIdlingResource.decrement()
+                    decrement()
                 }
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 Log.e(TAG, "${t.message}")
-                EspressoIdlingResource.decrement()
+                decrement()
             }
         })
     }
 
     fun getPopularShow(callback: LoadPopularShow) {
-        EspressoIdlingResource.increment()
+        increment()
 
         val client = ApiConfig.getApiService().getTvShow()
         client.enqueue(object : Callback<TvShowResponse> {
@@ -44,26 +59,26 @@ class RemoteDataSource {
             ) {
                 if (response.isSuccessful) {
                     callback.popularShow(response.body()?.results)
-                    EspressoIdlingResource.decrement()
+                    decrement()
                 }
             }
 
             override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
                 Log.e(TAG, "${t.message}")
-                EspressoIdlingResource.decrement()
+                decrement()
             }
         })
     }
 
-    fun getDetailMovie(mediaId: Int, callback: LoadDetailMovie) {
-        EspressoIdlingResource.increment()
+    fun getDetailMovie(movieId: Int, callback: LoadDetailMovie) {
+        increment()
 
-        val client = ApiConfig.getApiService().getDetailMovie(mediaId)
+        val client = ApiConfig.getApiService().getDetailMovie(movieId)
         client.enqueue(object : Callback<DetailMovieResponse> {
             override fun onResponse(call: Call<DetailMovieResponse>, response: Response<DetailMovieResponse>) {
                 if (response.isSuccessful) {
                     callback.detailMovie(response.body())
-                    EspressoIdlingResource.decrement()
+                    decrement()
                 }
             }
 
@@ -73,15 +88,15 @@ class RemoteDataSource {
         })
     }
 
-    fun getDetailTvShow(mediaId: Int, callback: LoadDetailTvShow) {
-        EspressoIdlingResource.increment()
+    fun getDetailTvShow(showId: Int, callback: LoadDetailTvShow) {
+        increment()
 
-        val client = ApiConfig.getApiService().getDetailTvShow(mediaId)
+        val client = ApiConfig.getApiService().getDetailTvShow(showId)
         client.enqueue(object : Callback<DetailTvShowResponse> {
             override fun onResponse(call: Call<DetailTvShowResponse>, response: Response<DetailTvShowResponse>) {
                 if (response.isSuccessful) {
                     callback.detailTvShow(response.body())
-                    EspressoIdlingResource.decrement()
+                    decrement()
                 }
             }
 
@@ -104,6 +119,6 @@ class RemoteDataSource {
     }
 
     interface LoadPopularMovie {
-        fun popularMovie(isPopularMovie : List<MovieResultsItem>?)
+        fun popularMovie(isPopularMovie: List<MovieResultsItem>?)
     }
 }
