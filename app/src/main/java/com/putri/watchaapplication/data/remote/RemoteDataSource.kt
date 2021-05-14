@@ -1,11 +1,8 @@
 package com.putri.watchaapplication.data.remote
 
 import android.util.Log
-import com.putri.watchaapplication.data.entity.MediaEntity
 import com.putri.watchaapplication.data.remote.response.*
 import com.putri.watchaapplication.network.ApiConfig
-import com.putri.watchaapplication.network.ApiService
-import com.putri.watchaapplication.utils.EspressoIdlingResource
 import com.putri.watchaapplication.utils.EspressoIdlingResource.decrement
 import com.putri.watchaapplication.utils.EspressoIdlingResource.increment
 import retrofit2.Call
