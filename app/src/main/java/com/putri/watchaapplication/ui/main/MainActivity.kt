@@ -3,7 +3,6 @@ package com.putri.watchaapplication.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import com.putri.watchaapplication.R

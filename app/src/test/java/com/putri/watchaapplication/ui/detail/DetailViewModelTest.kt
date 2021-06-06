@@ -3,7 +3,6 @@ package com.putri.watchaapplication.ui.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.data.local.entity.MovieEntity
@@ -11,8 +10,6 @@ import com.putri.watchaapplication.data.local.entity.ShowEntity
 import com.putri.watchaapplication.utils.DataMedia
 import com.putri.watchaapplication.vo.Resource
 import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -30,14 +27,6 @@ class DetailViewModelTest {
 
     private val dummyShow = DataMedia.setDetailDummyShow()
     private val showId = dummyShow.showId
-
-//    val dummyMovie = DataMedia.setDummyMovie()[0]
-//    private val movieId = dummyMovie.movieId
-//    private val dummyDetailMovie = DataMedia.setDetailDummyMovie(movieId as Int)[0]
-
-//    val dummyShow = DataMedia.setDummyShow()[0]
-//    private val showId = dummyShow.showId
-//    private val dummyDetailShow = DataMedia.setDetailDummyShow(showId)[0]
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()

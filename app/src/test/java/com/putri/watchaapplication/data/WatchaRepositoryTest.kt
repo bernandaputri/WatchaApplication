@@ -20,8 +20,6 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
-import org.mockito.Mockito
-
 class WatchaRepositoryTest {
 
     @get:Rule

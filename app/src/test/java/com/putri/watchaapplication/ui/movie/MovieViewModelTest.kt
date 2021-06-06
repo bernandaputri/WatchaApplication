@@ -1,14 +1,12 @@
 package com.putri.watchaapplication.ui.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.data.local.entity.MovieEntity
-import com.putri.watchaapplication.utils.DataMedia
 import com.putri.watchaapplication.vo.Resource
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull

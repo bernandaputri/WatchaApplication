@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.di.Injection
 import com.putri.watchaapplication.ui.detail.DetailViewModel
-import com.putri.watchaapplication.ui.favorite.movie.FavMovieAdapter
 import com.putri.watchaapplication.ui.favorite.movie.FavMovieViewModel
 import com.putri.watchaapplication.ui.favorite.tvshow.FavShowViewModel
 import com.putri.watchaapplication.ui.movie.MovieViewModel

@@ -7,16 +7,13 @@ import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.data.local.entity.ShowEntity
-import com.putri.watchaapplication.utils.DataMedia
 import com.putri.watchaapplication.vo.Resource
 import org.junit.Test
-
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
