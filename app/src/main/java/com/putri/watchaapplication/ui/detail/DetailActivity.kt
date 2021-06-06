@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.putri.watchaapplication.R
-import com.putri.watchaapplication.data.entity.DetailMediaEntity
+import com.putri.watchaapplication.data.local.entity.MovieEntity
+import com.putri.watchaapplication.data.local.entity.ShowEntity
 import com.putri.watchaapplication.databinding.ActivityDetailBinding
 import com.putri.watchaapplication.viewmodel.ViewModelFactory
+import com.putri.watchaapplication.vo.Status
 
 class DetailActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -18,7 +20,9 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private lateinit var binding: ActivityDetailBinding
-    private var isAdd = false
+    private lateinit var viewModel: DetailViewModel
+    private lateinit var mediaType: String
+    private var isAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,67 +34,195 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val viewModelFactory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
+
+        binding.btnSave.setOnClickListener(this)
+        binding.btnShareMedia.setOnClickListener(this)
 
         val extras = intent.extras
+        mediaType = intent.getStringExtra(EXTRA_TYPE).toString()
         if (extras != null) {
             val mediaId = extras.getInt("id", 0)
             if (mediaId != null) {
-                binding.progressBar.visibility = View.VISIBLE
-                when (intent.getStringExtra(EXTRA_TYPE)) {
+                when (mediaType) {
                     "movie" -> {
                         viewModel.selectedMovie(mediaId)
-                        viewModel.getDetailMovie().observe(this, { detail ->
-                            binding.progressBar.visibility = View.GONE
-                            populateDetail(detail) })
+                        viewModel.detailMovie.observe(this, { detailMovie ->
+                            when (detailMovie.status) {
+                                Status.LOADING -> {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                    binding.scrollView.visibility = View.GONE
+                                }
+                                Status.SUCCESS -> if (detailMovie.data != null) {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.scrollView.visibility = View.VISIBLE
+                                    populateDetailMovie(detailMovie.data)
+                                    setupState()
+//                                    val movieState = detailMovie.data.movieAdd
+//                                    setFavoriteState(movieState)
+//                                    isAdded = movieState
+                                }
+                                Status.ERROR -> {
+                                    binding.progressBar.visibility = View.INVISIBLE
+                                    binding.scrollView.visibility = View.INVISIBLE
+                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
                     }
                     "tvShow" -> {
                         viewModel.selectedTvShow(mediaId)
-                        viewModel.getDetailTvShow().observe(this, { detail ->
-                            binding.progressBar.visibility = View.GONE
-                            populateDetail(detail) })
+                        viewModel.detailShow.observe(this, { detailShow ->
+                            when (detailShow.status) {
+                                Status.LOADING -> {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                    binding.scrollView.visibility = View.GONE
+                                }
+                                Status.SUCCESS -> if (detailShow.data != null) {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.scrollView.visibility = View.VISIBLE
+                                    populateDetailShow(detailShow.data)
+                                    setupState()
+//                                    val showState = detailShow.data.showAdd
+//                                    setFavoriteState(showState)
+//                                    isAdded = showState
+                                }
+                                Status.ERROR -> {
+                                    binding.progressBar.visibility = View.INVISIBLE
+                                    binding.scrollView.visibility = View.INVISIBLE
+                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
                     }
                 }
             }
         }
-
-        binding.btnSave.setOnClickListener(this)
-        binding.btnShareMedia.setOnClickListener(this)
     }
 
-    private fun populateDetail(result: DetailMediaEntity) {
+    private fun setupState() {
+        val extras = intent.extras
+        mediaType = intent.getStringExtra(EXTRA_TYPE).toString()
+        if (extras != null) {
+            val mediaId = extras.getInt("id", 0)
+            if (mediaId != null) {
+                when (mediaType) {
+                    "movie" -> {
+                        viewModel.selectedMovie(mediaId)
+                        viewModel.detailMovie.observe(this, { detailMovie ->
+                            when (detailMovie.status) {
+                                Status.LOADING -> {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                }
+                                Status.SUCCESS -> if (detailMovie.data != null) {
+                                    binding.progressBar.visibility = View.GONE
+                                    val movieState = detailMovie.data.movieAdd
+                                    setFavoriteState(movieState)
+                                    isAdded = movieState
+                                }
+                                Status.ERROR -> {
+                                    binding.progressBar.visibility = View.INVISIBLE
+                                    binding.scrollView.visibility = View.INVISIBLE
+                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
+                    }
+                    "tvShow" -> {
+                        viewModel.selectedTvShow(mediaId)
+                        viewModel.detailShow.observe(this, { detailShow ->
+                            when (detailShow.status) {
+                                Status.LOADING -> {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                }
+                                Status.SUCCESS -> if (detailShow.data != null) {
+                                    binding.progressBar.visibility = View.GONE
+                                    val showState = detailShow.data.showAdd
+                                    setFavoriteState(showState)
+                                    isAdded = showState
+                                }
+                                Status.ERROR -> {
+                                    binding.progressBar.visibility = View.INVISIBLE
+                                    binding.scrollView.visibility = View.INVISIBLE
+                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    private fun populateDetailShow(result: ShowEntity) {
         with(binding) {
-            collapseToolbar.title = result.mediaTitle
+            collapseToolbar.title = result.showTitle
 
             Glide.with(this@DetailActivity)
-                    .load("https://image.tmdb.org/t/p/w500" + result.mediaPoster)
+                    .load("https://image.tmdb.org/t/p/w500" + result.showPoster)
                     .into(imgMedia)
 
-            tvOverview.text = result.mediaDesc
-            tvGenre.text = result.mediaGenres
-            tvDate.text = result.mediaRelease
+            tvOverview.text = result.showDesc
+            tvDate.text = result.showRelease
+        }
+    }
+
+    private fun populateDetailMovie(result: MovieEntity) {
+        with(binding) {
+            collapseToolbar.title = result.movieTitle
+
+            Glide.with(this@DetailActivity)
+                    .load("https://image.tmdb.org/t/p/w500" + result.moviePoster)
+                    .into(imgMedia)
+
+            tvOverview.text = result.movieDesc
+            tvDate.text = result.movieRelease
         }
 
+    }
+
+    private fun setFavoriteState(state: Boolean) {
+        if (state) {
+            binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check,0,0,0)
+            binding.btnSave.setText(R.string.added_to_watchlist)
+//            Toast.makeText(this, getString(R.string.btn_add), Toast.LENGTH_SHORT).show()
+        } else {
+            binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add,0,0,0)
+            binding.btnSave.setText(R.string.add_to_watchlist)
+//            Toast.makeText(this, getString(R.string.btn_added), Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_save -> {
-                if (isAdd) {
-                    binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add,0,0,0)
-                    binding.btnSave.setText(R.string.add_to_watchlist)
-                    Toast.makeText(this, getString(R.string.btn_added), Toast.LENGTH_SHORT).show()
-                    isAdd = false
-                } else {
-                    binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check,0,0,0)
-                    binding.btnSave.setText(R.string.added_to_watchlist)
-                    Toast.makeText(this, getString(R.string.btn_add), Toast.LENGTH_SHORT).show()
-                    isAdd = true
+                val extras = intent.extras
+                if (extras != null) {
+                    if (mediaType == "movie") {
+                        if (isAdded) {
+                            Toast.makeText(this, getString(R.string.btn_added), Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, getString(R.string.btn_add), Toast.LENGTH_SHORT).show()
+                        }
+                        viewModel.setFavMovie()
+                    } else if (mediaType == "tvShow") {
+                        if (isAdded) {
+                            Toast.makeText(this, getString(R.string.btn_added), Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, getString(R.string.btn_add), Toast.LENGTH_SHORT).show()
+                        }
+                        viewModel.setFavShow()
+                    }
                 }
             }
             R.id.btn_share_media -> {
                 Toast.makeText(this, getString(R.string.btn_share), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

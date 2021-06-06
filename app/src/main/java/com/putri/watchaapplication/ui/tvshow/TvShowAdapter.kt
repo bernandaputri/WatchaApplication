@@ -3,38 +3,45 @@ package com.putri.watchaapplication.ui.tvshow
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.putri.watchaapplication.data.entity.MediaEntity
+import com.putri.watchaapplication.data.local.entity.ShowEntity
 import com.putri.watchaapplication.databinding.ItemsListBinding
 import com.putri.watchaapplication.ui.detail.DetailActivity
 
-class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.MediaViewHolder>() {
-    private var listShows = ArrayList<MediaEntity>()
+class TvShowAdapter : PagedListAdapter<ShowEntity, TvShowAdapter.ShowViewHolder>(DIFF_CALLBACK) {
 
-    fun setShows(shows: List<MediaEntity>) {
-        if (shows.isNullOrEmpty()) return
-        this.listShows.clear()
-        this.listShows.addAll(shows)
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ShowEntity>() {
+            override fun areItemsTheSame(oldItem: ShowEntity, newItem: ShowEntity): Boolean {
+                return oldItem.showId == newItem.showId
+            }
+            override fun areContentsTheSame(oldItem: ShowEntity, newItem: ShowEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
-    class MediaViewHolder(private val binding: ItemsListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(shows: MediaEntity) {
+    class ShowViewHolder(private val binding: ItemsListBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(shows: ShowEntity) {
             with(binding) {
                 Glide.with(itemView.context)
-                        .load("https://image.tmdb.org/t/p/w500" + shows.poster_path)
-                    .apply(RequestOptions().override(80,120))
-                    .transform(RoundedCorners(15))
-                    .into(mediaPoster)
+                        .load("https://image.tmdb.org/t/p/w500" + shows.showPoster)
+                        .apply(RequestOptions().override(80,120))
+                        .transform(RoundedCorners(15))
+                        .into(mediaPoster)
 
-                itemTitle.text = shows.title
-                itemRating.text = shows.rating.toString()
+                itemTitle.text = shows.showTitle
+                itemRating.text = shows.showRating.toString()
 
                 itemView.setOnClickListener {
                     val intent = Intent(itemView.context, DetailActivity::class.java)
-                    intent.putExtra("id", shows.id)
+                    intent.putExtra("id", shows.showId)
                     intent.putExtra(DetailActivity.EXTRA_TYPE, "tvShow")
                     itemView.context.startActivity(intent)
                 }
@@ -42,15 +49,16 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.MediaViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
         val itemsListBinding = ItemsListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MediaViewHolder(itemsListBinding)
+        return ShowViewHolder(itemsListBinding)
     }
 
-    override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
-        val movie = listShows[position]
-        holder.bind(movie)
+    override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
+        val show = getItem(position)
+        if (show != null) {
+            holder.bind(show)
+        }
     }
 
-    override fun getItemCount(): Int = listShows.size
 }

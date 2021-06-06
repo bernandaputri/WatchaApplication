@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.di.Injection
 import com.putri.watchaapplication.ui.detail.DetailViewModel
+import com.putri.watchaapplication.ui.favorite.movie.FavMovieAdapter
+import com.putri.watchaapplication.ui.favorite.movie.FavMovieViewModel
+import com.putri.watchaapplication.ui.favorite.tvshow.FavShowViewModel
 import com.putri.watchaapplication.ui.movie.MovieViewModel
 import com.putri.watchaapplication.ui.tvshow.TvShowViewModel
 
@@ -16,7 +19,7 @@ class ViewModelFactory private constructor(private val mWatchaRepository: Watcha
 
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository())
+                instance ?: ViewModelFactory(Injection.provideRepository(context)).apply { instance = this }
             }
     }
 
@@ -31,6 +34,12 @@ class ViewModelFactory private constructor(private val mWatchaRepository: Watcha
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 return DetailViewModel(mWatchaRepository) as T
+            }
+            modelClass.isAssignableFrom(FavMovieViewModel::class.java) -> {
+                return FavMovieViewModel(mWatchaRepository) as T
+            }
+            modelClass.isAssignableFrom(FavShowViewModel::class.java) -> {
+                return FavShowViewModel(mWatchaRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

@@ -1,15 +1,25 @@
 package com.putri.watchaapplication.data
 
 import androidx.lifecycle.LiveData
-import com.putri.watchaapplication.data.entity.DetailMediaEntity
-import com.putri.watchaapplication.data.entity.MediaEntity
+import androidx.paging.PagedList
+import com.putri.watchaapplication.data.local.entity.MovieEntity
+import com.putri.watchaapplication.data.local.entity.ShowEntity
+import com.putri.watchaapplication.vo.Resource
 
 interface WatchaDataSource {
-    fun getPopularMovie() : LiveData<List<MediaEntity>>
+    fun getPopularMovie(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    fun getPopularShow() : LiveData<List<MediaEntity>>
+    fun getDetailMovie(movieId: Int): LiveData<Resource<MovieEntity>>
 
-    fun getDetailMovie(mediaId: Int) : LiveData<DetailMediaEntity>
+    fun setFavMovie(movie: MovieEntity, state: Boolean)
 
-    fun getDetailTvShow(mediaId: Int) : LiveData<DetailMediaEntity>
+    fun getFavMovie(): LiveData<PagedList<MovieEntity>>
+
+    fun getPopularShow(): LiveData<Resource<PagedList<ShowEntity>>>
+
+    fun getDetailShow(tvShowId: Int): LiveData<Resource<ShowEntity>>
+
+    fun setFavShow(tvShow: ShowEntity, state: Boolean)
+
+    fun getFavShow(): LiveData<PagedList<ShowEntity>>
 }

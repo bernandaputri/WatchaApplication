@@ -1,7 +1,10 @@
 package com.putri.watchaapplication.data.remote.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DetailTvShowResponse(
 
 		@field:SerializedName("id")
@@ -19,13 +22,7 @@ data class DetailTvShowResponse(
 		@field:SerializedName("first_air_date")
 		val firstAirDate: String,
 
-		@field:SerializedName("genres")
-		val genres: List<TvShowGenresItem>
+		@field:SerializedName("vote_average")
+		val voteAverage: Double
 
-)
-
-data class TvShowGenresItem(
-
-	@field:SerializedName("name")
-	val name: String
-)
+) : Parcelable

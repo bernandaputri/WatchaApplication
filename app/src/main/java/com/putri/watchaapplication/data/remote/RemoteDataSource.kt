@@ -1,6 +1,8 @@
 package com.putri.watchaapplication.data.remote
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.putri.watchaapplication.data.remote.response.*
 import com.putri.watchaapplication.network.ApiConfig
 import com.putri.watchaapplication.utils.EspressoIdlingResource.decrement
@@ -17,14 +19,15 @@ class RemoteDataSource {
         private var instance: RemoteDataSource? = null
 
         fun getInstance(): RemoteDataSource = instance ?: synchronized(this) {
-            instance ?: RemoteDataSource()
+            instance ?: RemoteDataSource().apply { instance = this }
         }
 
         private val TAG = RemoteDataSource::class.java.simpleName
     }
 
-    fun getPopularMovie(callback: LoadPopularMovie) {
+    fun getPopularMovie(): LiveData<ApiResponse<List<MovieResultsItem>>> {
         increment()
+        val listPopularMovie = MutableLiveData<ApiResponse<List<MovieResultsItem>>>()
 
         val client = ApiConfig.getApiService().getMovie()
         client.enqueue(object : Callback<MovieResponse> {
@@ -33,7 +36,8 @@ class RemoteDataSource {
                     response: Response<MovieResponse>
             ) {
                 if (response.isSuccessful) {
-                    callback.popularMovie(response.body()?.results)
+                    listPopularMovie.value =
+                            ApiResponse.success(response.body()?.results!!)
                     decrement()
                 }
             }
@@ -43,19 +47,22 @@ class RemoteDataSource {
                 decrement()
             }
         })
+        return listPopularMovie
     }
 
-    fun getPopularShow(callback: LoadPopularShow) {
+    fun getPopularShow(): LiveData<ApiResponse<List<TvShowResultsItem>>> {
         increment()
+        val listPopularShow = MutableLiveData<ApiResponse<List<TvShowResultsItem>>>()
 
         val client = ApiConfig.getApiService().getTvShow()
         client.enqueue(object : Callback<TvShowResponse> {
             override fun onResponse(
-                call: Call<TvShowResponse>,
-                response: Response<TvShowResponse>
+                    call: Call<TvShowResponse>,
+                    response: Response<TvShowResponse>
             ) {
                 if (response.isSuccessful) {
-                    callback.popularShow(response.body()?.results)
+                    listPopularShow.value =
+                            ApiResponse.success(response.body()?.results!!)
                     decrement()
                 }
             }
@@ -65,16 +72,19 @@ class RemoteDataSource {
                 decrement()
             }
         })
+        return listPopularShow
     }
 
-    fun getDetailMovie(movieId: Int, callback: LoadDetailMovie) {
+    fun getDetailMovie(movieId: Int): LiveData<ApiResponse<DetailMovieResponse>> {
         increment()
+        val listDetailMovie = MutableLiveData<ApiResponse<DetailMovieResponse>>()
 
         val client = ApiConfig.getApiService().getDetailMovie(movieId)
         client.enqueue(object : Callback<DetailMovieResponse> {
             override fun onResponse(call: Call<DetailMovieResponse>, response: Response<DetailMovieResponse>) {
                 if (response.isSuccessful) {
-                    callback.detailMovie(response.body())
+                    listDetailMovie.value =
+                            ApiResponse.success(response.body()!!)
                     decrement()
                 }
             }
@@ -83,16 +93,19 @@ class RemoteDataSource {
                 Log.e(TAG, "${t.message}")
             }
         })
+        return listDetailMovie
     }
 
-    fun getDetailTvShow(showId: Int, callback: LoadDetailTvShow) {
+    fun getDetailTvShow(showId: Int): LiveData<ApiResponse<DetailTvShowResponse>> {
         increment()
+        val listDetailShow = MutableLiveData<ApiResponse<DetailTvShowResponse>>()
 
         val client = ApiConfig.getApiService().getDetailTvShow(showId)
         client.enqueue(object : Callback<DetailTvShowResponse> {
             override fun onResponse(call: Call<DetailTvShowResponse>, response: Response<DetailTvShowResponse>) {
                 if (response.isSuccessful) {
-                    callback.detailTvShow(response.body())
+                    listDetailShow.value =
+                            ApiResponse.success(response.body()!!)
                     decrement()
                 }
             }
@@ -101,21 +114,7 @@ class RemoteDataSource {
                 Log.e(TAG, "${t.message}")
             }
         })
+        return listDetailShow
     }
 
-    interface LoadDetailTvShow {
-        fun detailTvShow(detailTvShow: DetailTvShowResponse?)
-    }
-
-    interface LoadDetailMovie {
-        fun detailMovie(detailMovie: DetailMovieResponse?)
-    }
-
-    interface LoadPopularShow {
-        fun popularShow(isPopularShow : List<TvShowResultsItem>?)
-    }
-
-    interface LoadPopularMovie {
-        fun popularMovie(isPopularMovie: List<MovieResultsItem>?)
-    }
 }

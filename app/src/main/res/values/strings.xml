@@ -17,4 +17,7 @@
     <string name="btn_share">You share this content</string>
     <string name="tittle_genre">GENRE</string>
     <string name="genre">Item Genre</string>
+    <string name="fav_list_title">Watch List</string>
+    <string name="message_undo">Undo deleting from your watchlist?</string>
+    <string name="message_ok">OK</string>
 </resources>

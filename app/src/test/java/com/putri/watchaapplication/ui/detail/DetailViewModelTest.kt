@@ -3,10 +3,13 @@ package com.putri.watchaapplication.ui.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
 import com.putri.watchaapplication.data.WatchaRepository
-import com.putri.watchaapplication.data.entity.DetailMediaEntity
+import com.putri.watchaapplication.data.local.entity.MovieEntity
+import com.putri.watchaapplication.data.local.entity.ShowEntity
 import com.putri.watchaapplication.utils.DataMedia
+import com.putri.watchaapplication.vo.Resource
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -22,13 +25,19 @@ class DetailViewModelTest {
 
     private lateinit var detailViewModel: DetailViewModel
 
-    val dummyMovie = DataMedia.setDummyMovie()[0]
-    private val movieId = dummyMovie.id
-    private val dummyDetailMovie = DataMedia.setDetailDummyMovie(movieId as Int)[0]
+    private val dummyMovie = DataMedia.setDetailDummyMovie()
+    private val movieId = dummyMovie.movieId
 
-    val dummyShow = DataMedia.setDummyShow()[0]
-    private val showId = dummyShow.id
-    private val dummyDetailShow = DataMedia.setDetailDummyShow(showId)[0]
+    private val dummyShow = DataMedia.setDetailDummyShow()
+    private val showId = dummyShow.showId
+
+//    val dummyMovie = DataMedia.setDummyMovie()[0]
+//    private val movieId = dummyMovie.movieId
+//    private val dummyDetailMovie = DataMedia.setDetailDummyMovie(movieId as Int)[0]
+
+//    val dummyShow = DataMedia.setDummyShow()[0]
+//    private val showId = dummyShow.showId
+//    private val dummyDetailShow = DataMedia.setDetailDummyShow(showId)[0]
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -37,52 +46,40 @@ class DetailViewModelTest {
     private lateinit var watchaRepository: WatchaRepository
 
     @Mock
-    private lateinit var observer: Observer<DetailMediaEntity>
+    private lateinit var movieObserver: Observer<Resource<MovieEntity>>
+
+    @Mock
+    private lateinit var showObserver: Observer<Resource<ShowEntity>>
 
     @Before
     fun setup() {
         detailViewModel = DetailViewModel(watchaRepository)
-        movieId?.let { detailViewModel.selectedMovie(it) }
-        showId?.let { detailViewModel.selectedTvShow(it) }
+        detailViewModel.selectedMovie(movieId as Int)
+        detailViewModel.selectedTvShow(showId as Int)
+        detailViewModel.setFavMovie()
+        detailViewModel.setFavShow()
     }
 
     @Test
     fun getDetailMovie() {
-        val detailMovie = MutableLiveData<DetailMediaEntity>()
+        val dummyDetailMovie = Resource.success(dummyMovie)
+        val detailMovie = MutableLiveData<Resource<MovieEntity>>()
         detailMovie.value = dummyDetailMovie
 
         `when`(watchaRepository.getDetailMovie(movieId as Int)).thenReturn(detailMovie)
-        val detailMovieEntity = detailViewModel.getDetailMovie().value as DetailMediaEntity
-        verify(watchaRepository).getDetailMovie(movieId)
-        assertNotNull(detailMovieEntity)
-        assertEquals(dummyDetailMovie.mediaId, detailMovieEntity.mediaId)
-        assertEquals(dummyDetailMovie.mediaTitle, detailMovieEntity.mediaTitle)
-        assertEquals(dummyDetailMovie.mediaPoster, detailMovieEntity.mediaPoster)
-        assertEquals(dummyDetailMovie.mediaDesc, detailMovieEntity.mediaDesc)
-        assertEquals(dummyDetailMovie.mediaRelease, detailMovieEntity.mediaRelease)
-        assertEquals(dummyDetailMovie.mediaGenres, detailMovieEntity.mediaGenres)
 
-        detailViewModel.getDetailMovie().observeForever(observer)
-        verify(observer).onChanged(dummyDetailMovie)
+        detailViewModel.detailMovie.observeForever(movieObserver)
+        verify(movieObserver).onChanged(dummyDetailMovie)
+
     }
 
     @Test
     fun getDetailTvShow() {
-        val detailShow = MutableLiveData<DetailMediaEntity>()
+        val dummyDetailShow = Resource.success(dummyShow)
+        val detailShow = MutableLiveData<Resource<ShowEntity>>()
         detailShow.value = dummyDetailShow
 
-        `when`(watchaRepository.getDetailTvShow(showId as Int)).thenReturn(detailShow)
-        val detailShowEntity = detailViewModel.getDetailTvShow().value as DetailMediaEntity
-        verify(watchaRepository).getDetailTvShow(showId)
-        assertNotNull(detailShowEntity)
-        assertEquals(dummyDetailShow.mediaId, detailShowEntity.mediaId)
-        assertEquals(dummyDetailShow.mediaTitle, detailShowEntity.mediaTitle)
-        assertEquals(dummyDetailShow.mediaPoster, detailShowEntity.mediaPoster)
-        assertEquals(dummyDetailShow.mediaDesc, detailShowEntity.mediaDesc)
-        assertEquals(dummyDetailShow.mediaRelease, detailShowEntity.mediaRelease)
-        assertEquals(dummyDetailShow.mediaGenres, detailShowEntity.mediaGenres)
-
-        detailViewModel.getDetailTvShow().observeForever(observer)
-        verify(observer).onChanged(dummyDetailShow)
+        detailViewModel.detailShow.observeForever(showObserver)
+        verify(showObserver).onChanged(dummyDetailShow)
     }
 }
