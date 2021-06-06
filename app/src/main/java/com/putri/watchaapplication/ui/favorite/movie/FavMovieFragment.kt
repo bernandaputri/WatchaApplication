@@ -46,10 +46,6 @@ class FavMovieFragment : Fragment() {
                 }
             })
 
-//            binding.rvMovie.adapter = favMovieAdapter
-//            binding.rvMovie.layoutManager = LinearLayoutManager(requireContext())
-//            binding.rvMovie.setHasFixedSize(true)
-
             with(binding.rvMovie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)

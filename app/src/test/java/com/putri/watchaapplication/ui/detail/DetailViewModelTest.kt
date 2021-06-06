@@ -68,7 +68,7 @@ class DetailViewModelTest {
 
         `when`(watchaRepository.getDetailMovie(movieId as Int)).thenReturn(detailMovie)
 
-        detailViewModel.detailMovie.observeForever(movieObserver)
+        detailViewModel.getDetailMovie().observeForever(movieObserver)
         verify(movieObserver).onChanged(dummyDetailMovie)
 
     }
@@ -79,7 +79,7 @@ class DetailViewModelTest {
         val detailShow = MutableLiveData<Resource<ShowEntity>>()
         detailShow.value = dummyDetailShow
 
-        detailViewModel.detailShow.observeForever(showObserver)
+        detailViewModel.getDetailShow().observeForever(showObserver)
         verify(showObserver).onChanged(dummyDetailShow)
     }
 }

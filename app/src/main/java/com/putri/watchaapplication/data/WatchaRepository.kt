@@ -12,8 +12,6 @@ import com.putri.watchaapplication.data.remote.response.DetailMovieResponse
 import com.putri.watchaapplication.data.remote.response.DetailTvShowResponse
 import com.putri.watchaapplication.data.remote.response.MovieResultsItem
 import com.putri.watchaapplication.data.remote.response.TvShowResultsItem
-import com.putri.watchaapplication.helper.GenresHelper.genreMovie
-import com.putri.watchaapplication.helper.GenresHelper.genreTvShow
 import com.putri.watchaapplication.utils.AppExecutors
 import com.putri.watchaapplication.vo.Resource
 

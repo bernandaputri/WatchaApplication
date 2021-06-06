@@ -47,20 +47,15 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                 when (mediaType) {
                     "movie" -> {
                         viewModel.selectedMovie(mediaId)
-                        viewModel.detailMovie.observe(this, { detailMovie ->
+                        viewModel.getDetailMovie().observe(this, { detailMovie ->
                             when (detailMovie.status) {
                                 Status.LOADING -> {
                                     binding.progressBar.visibility = View.VISIBLE
-                                    binding.scrollView.visibility = View.GONE
                                 }
                                 Status.SUCCESS -> if (detailMovie.data != null) {
                                     binding.progressBar.visibility = View.GONE
-                                    binding.scrollView.visibility = View.VISIBLE
                                     populateDetailMovie(detailMovie.data)
                                     setupState()
-//                                    val movieState = detailMovie.data.movieAdd
-//                                    setFavoriteState(movieState)
-//                                    isAdded = movieState
                                 }
                                 Status.ERROR -> {
                                     binding.progressBar.visibility = View.INVISIBLE
@@ -72,20 +67,15 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     "tvShow" -> {
                         viewModel.selectedTvShow(mediaId)
-                        viewModel.detailShow.observe(this, { detailShow ->
+                        viewModel.getDetailShow().observe(this, { detailShow ->
                             when (detailShow.status) {
                                 Status.LOADING -> {
                                     binding.progressBar.visibility = View.VISIBLE
-                                    binding.scrollView.visibility = View.GONE
                                 }
                                 Status.SUCCESS -> if (detailShow.data != null) {
                                     binding.progressBar.visibility = View.GONE
-                                    binding.scrollView.visibility = View.VISIBLE
                                     populateDetailShow(detailShow.data)
                                     setupState()
-//                                    val showState = detailShow.data.showAdd
-//                                    setFavoriteState(showState)
-//                                    isAdded = showState
                                 }
                                 Status.ERROR -> {
                                     binding.progressBar.visibility = View.INVISIBLE
@@ -101,56 +91,30 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setupState() {
-        val extras = intent.extras
-        mediaType = intent.getStringExtra(EXTRA_TYPE).toString()
-        if (extras != null) {
-            val mediaId = extras.getInt("id", 0)
-            if (mediaId != null) {
-                when (mediaType) {
-                    "movie" -> {
-                        viewModel.selectedMovie(mediaId)
-                        viewModel.detailMovie.observe(this, { detailMovie ->
-                            when (detailMovie.status) {
-                                Status.LOADING -> {
-                                    binding.progressBar.visibility = View.VISIBLE
-                                }
-                                Status.SUCCESS -> if (detailMovie.data != null) {
-                                    binding.progressBar.visibility = View.GONE
-                                    val movieState = detailMovie.data.movieAdd
-                                    setFavoriteState(movieState)
-                                    isAdded = movieState
-                                }
-                                Status.ERROR -> {
-                                    binding.progressBar.visibility = View.INVISIBLE
-                                    binding.scrollView.visibility = View.INVISIBLE
-                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        })
-                    }
-                    "tvShow" -> {
-                        viewModel.selectedTvShow(mediaId)
-                        viewModel.detailShow.observe(this, { detailShow ->
-                            when (detailShow.status) {
-                                Status.LOADING -> {
-                                    binding.progressBar.visibility = View.VISIBLE
-                                }
-                                Status.SUCCESS -> if (detailShow.data != null) {
-                                    binding.progressBar.visibility = View.GONE
-                                    val showState = detailShow.data.showAdd
-                                    setFavoriteState(showState)
-                                    isAdded = showState
-                                }
-                                Status.ERROR -> {
-                                    binding.progressBar.visibility = View.INVISIBLE
-                                    binding.scrollView.visibility = View.INVISIBLE
-                                    Toast.makeText(applicationContext, "Failed to Load Data", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        })
+        if (mediaType == "movie") {
+            viewModel.getDetailMovie().observe(this, { favMovie ->
+                when (favMovie.status) {
+                    Status.SUCCESS -> {
+                        if (favMovie.data != null) {
+                            val movieState = favMovie.data.movieAdd
+                            setFavoriteState(movieState)
+                            isAdded = movieState
+                        }
                     }
                 }
-            }
+            })
+        } else if (mediaType == "tvShow") {
+            viewModel.getDetailShow().observe(this, { favShow ->
+                when (favShow.status) {
+                    Status.SUCCESS -> {
+                        if (favShow.data != null) {
+                            val showState = favShow.data.showAdd
+                            setFavoriteState(showState)
+                            isAdded = showState
+                        }
+                    }
+                }
+            })
         }
     }
 
@@ -182,14 +146,15 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setFavoriteState(state: Boolean) {
-        if (state) {
-            binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check,0,0,0)
-            binding.btnSave.setText(R.string.added_to_watchlist)
-//            Toast.makeText(this, getString(R.string.btn_add), Toast.LENGTH_SHORT).show()
-        } else {
-            binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add,0,0,0)
-            binding.btnSave.setText(R.string.add_to_watchlist)
-//            Toast.makeText(this, getString(R.string.btn_added), Toast.LENGTH_SHORT).show()
+        val extras = intent.extras
+        if (extras != null) {
+            if (state) {
+                binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check,0,0,0)
+                binding.btnSave.setText(R.string.added_to_watchlist)
+            } else {
+                binding.btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add,0,0,0)
+                binding.btnSave.setText(R.string.add_to_watchlist)
+            }
         }
     }
 
