@@ -32,9 +32,9 @@ class WatchaRepositoryTest {
     private val watchaRepository = FakeWatchaRepository(remoteDataSource, localDataSource, appExecutors)
 
     private val movieResponse = DataMedia.setRemoteDummyMovie()
-    private val movieId = movieResponse[1].id
+    private val movieId = movieResponse[0].id
     private val showResponse = DataMedia.setRemoteDummyShow()
-    private val showId = showResponse[1].id
+    private val showId = showResponse[0].id
 
     private val detailMovieResponse = DataMedia.setDetailRemoteDummyMovie(movieId)
     private val detailShowResponse = DataMedia.setDetailRemoteDummyShow(showId)

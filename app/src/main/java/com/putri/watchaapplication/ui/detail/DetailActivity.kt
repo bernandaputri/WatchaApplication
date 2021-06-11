@@ -47,7 +47,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                 when (mediaType) {
                     "movie" -> {
                         viewModel.selectedMovie(mediaId)
-                        viewModel.getDetailMovie().observe(this, { detailMovie ->
+                        viewModel.detailMovie.observe(this, { detailMovie ->
                             when (detailMovie.status) {
                                 Status.LOADING -> {
                                     binding.progressBar.visibility = View.VISIBLE
@@ -67,7 +67,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     "tvShow" -> {
                         viewModel.selectedTvShow(mediaId)
-                        viewModel.getDetailShow().observe(this, { detailShow ->
+                        viewModel.detailShow.observe(this, { detailShow ->
                             when (detailShow.status) {
                                 Status.LOADING -> {
                                     binding.progressBar.visibility = View.VISIBLE
@@ -92,7 +92,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun setupState() {
         if (mediaType == "movie") {
-            viewModel.getDetailMovie().observe(this, { favMovie ->
+            viewModel.detailMovie.observe(this, { favMovie ->
                 when (favMovie.status) {
                     Status.SUCCESS -> {
                         if (favMovie.data != null) {
@@ -104,7 +104,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener {
                 }
             })
         } else if (mediaType == "tvShow") {
-            viewModel.getDetailShow().observe(this, { favShow ->
+            viewModel.detailShow.observe(this, { favShow ->
                 when (favShow.status) {
                     Status.SUCCESS -> {
                         if (favShow.data != null) {

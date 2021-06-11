@@ -28,12 +28,12 @@ object DataMedia {
         ))
 
         movies.add(MovieEntity(
-                460465,
-                "Mortal Kombat",
-                "/nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
-                7.7,
-                "Washed-up MMA fighter Cole Young, unaware of his heritage, and hunted by Emperor Shang Tsung's best warrior, Sub-Zero, seeks out and trains with Earth's greatest champions as he prepares to stand against the enemies of Outworld in a high stakes battle for the universe.",
-                "2021-04-07"
+                423108,
+                "The Conjuring: The Devil Made Me Do It",
+                "/xbSuFiJbbBWCkyCCKIMfuDCA4yV.jpg",
+                8.4,
+                "Paranormal investigators Ed and Lorraine Warren encounter what would become one of the most sensational cases from their files. The fight for the soul of a young boy takes them beyond anything they'd ever seen before, to mark the first time in U.S. history that a murder suspect would claim demonic possession as a defense.",
+                "2021-05-25"
         ))
 
         return movies
@@ -122,19 +122,18 @@ object DataMedia {
         ))
 
         remoteMovies.add(MovieResultsItem(
-                460465,
-                "Mortal Kombat",
-                "/nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
-                7.7,
-                "Washed-up MMA fighter Cole Young, unaware of his heritage, and hunted by Emperor Shang Tsung's best warrior, Sub-Zero, seeks out and trains with Earth's greatest champions as he prepares to stand against the enemies of Outworld in a high stakes battle for the universe.",
-                "2021-04-07"
+                423108,
+                "The Conjuring: The Devil Made Me Do It",
+                "/xbSuFiJbbBWCkyCCKIMfuDCA4yV.jpg",
+                8.4,
+                "Paranormal investigators Ed and Lorraine Warren encounter what would become one of the most sensational cases from their files. The fight for the soul of a young boy takes them beyond anything they'd ever seen before, to mark the first time in U.S. history that a murder suspect would claim demonic possession as a defense.",
+                "2021-05-25"
         ))
 
         return remoteMovies
     }
 
     fun setDetailRemoteDummyMovie(mediaId: Int) : DetailMovieResponse {
-//        val detailRemoteMovie = ArrayList<DetailMovieResponse>()
 
         return DetailMovieResponse(
                 mediaId,
@@ -145,7 +144,6 @@ object DataMedia {
                 8.8
         )
 
-//        return detailRemoteMovie
     }
 
     fun setRemoteDummyShow() : ArrayList<TvShowResultsItem> {
@@ -183,7 +181,6 @@ object DataMedia {
     }
 
     fun setDetailRemoteDummyShow(mediaId: Int) : DetailTvShowResponse {
-//        val detailRemoteShow= ArrayList<DetailTvShowResponse>()
 
         return DetailTvShowResponse(
                 mediaId,
@@ -194,6 +191,5 @@ object DataMedia {
                 8.4
         )
 
-//        return detailRemoteShow
     }
 }
