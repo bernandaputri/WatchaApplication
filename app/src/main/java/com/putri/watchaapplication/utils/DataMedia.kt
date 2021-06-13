@@ -62,7 +62,7 @@ object DataMedia {
                 "/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg",
                 8.4,
                 "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.",
-                "2015-08-23"
+                "2011-04-17"
         ))
 
         shows.add(ShowEntity(
@@ -94,7 +94,7 @@ object DataMedia {
                 "/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg",
                 8.4,
                 "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.",
-                "2015-08-23"
+                "2011-04-17"
         )
 
     }

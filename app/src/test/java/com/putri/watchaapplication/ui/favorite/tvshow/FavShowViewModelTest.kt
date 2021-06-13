@@ -7,14 +7,17 @@ import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
 import com.putri.watchaapplication.data.WatchaRepository
 import com.putri.watchaapplication.data.local.entity.ShowEntity
+import org.junit.Assert
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
+import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class FavShowViewModelTest {
 
     private lateinit var favShowViewModel: FavShowViewModel
@@ -32,27 +35,27 @@ class FavShowViewModelTest {
     private lateinit var pagedList: PagedList<ShowEntity>
 
     @Before
-    fun setup() {
+    fun setUp() {
         favShowViewModel = FavShowViewModel(watchaRepository)
     }
 
     @Test
     fun getFavShow() {
-        val dummyshow = pagedList
-        Mockito.`when`(dummyshow.size).thenReturn(3)
+        val dummyShow = pagedList
+        `when`(dummyShow.size).thenReturn(3)
 
         val shows = MutableLiveData<PagedList<ShowEntity>>()
-        shows.value = dummyshow
+        shows.value = dummyShow
 
-        Mockito.`when`(watchaRepository.getFavShow()).thenReturn(shows)
+        `when`(watchaRepository.getFavShow()).thenReturn(shows)
 
         val showEntities = favShowViewModel.getFavShow().value
         verify(watchaRepository).getFavShow()
 
-        assertNotNull(showEntities)
-        assertEquals(3, showEntities?.size)
+        Assert.assertNotNull(showEntities)
+        Assert.assertEquals(3, showEntities?.size)
 
         favShowViewModel.getFavShow().observeForever(observer)
-        verify(observer).onChanged(dummyshow)
+        verify(observer).onChanged(dummyShow)
     }
 }

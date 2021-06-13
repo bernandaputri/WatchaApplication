@@ -14,19 +14,14 @@ class DetailViewModel (private val watchaRepository: WatchaRepository) : ViewMod
     val movieId = MutableLiveData<Int>()
     val showId = MutableLiveData<Int>()
 
-//    private var movieId: Int? = 0
-//    private lateinit var movies: LiveData<Resource<MovieEntity>>
-//
-//    private var showId: Int? = 0
-//    private lateinit var shows: LiveData<Resource<ShowEntity>>
-//
     fun selectedMovie(movieId: Int) {
         this.movieId.value = movieId
-//        movies = watchaRepository.getDetailMovie(movieId)
     }
-//
-//    fun getDetailMovie() = movies
-//
+
+    var detailMovie: LiveData<Resource<MovieEntity>> = Transformations.switchMap(movieId) { movieId ->
+        watchaRepository.getDetailMovie(movieId)
+    }
+
     fun setFavMovie() {
         val favMovie = detailMovie.value
         if (favMovie?.data != null) {
@@ -34,23 +29,15 @@ class DetailViewModel (private val watchaRepository: WatchaRepository) : ViewMod
             watchaRepository.setFavMovie(favMovie.data, newState)
         }
     }
-//
+
     fun selectedTvShow(showId: Int) {
         this.showId.value = showId
-//        shows = watchaRepository.getDetailShow(showId)
     }
 
     var detailShow: LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId) { showId ->
         watchaRepository.getDetailShow(showId)
     }
 
-    var detailMovie: LiveData<Resource<MovieEntity>> = Transformations.switchMap(movieId) { movieId ->
-        watchaRepository.getDetailMovie(movieId)
-    }
-
-//
-//    fun getDetailShow() = shows
-//
     fun setFavShow() {
 
         val favShow = detailShow.value

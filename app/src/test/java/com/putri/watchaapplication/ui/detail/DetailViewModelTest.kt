@@ -43,10 +43,8 @@ class DetailViewModelTest {
     @Before
     fun setup() {
         detailViewModel = DetailViewModel(watchaRepository)
-        detailViewModel.selectedMovie(movieId as Int)
-        detailViewModel.selectedTvShow(showId as Int)
-        detailViewModel.setFavMovie()
-        detailViewModel.setFavShow()
+        movieId?.let { detailViewModel.selectedMovie(it) }
+        showId?.let { detailViewModel.selectedTvShow(it) }
     }
 
     @Test
@@ -67,6 +65,8 @@ class DetailViewModelTest {
         val dummyDetailShow = Resource.success(dummyShow)
         val detailShow = MutableLiveData<Resource<ShowEntity>>()
         detailShow.value = dummyDetailShow
+
+        `when`(watchaRepository.getDetailShow(showId as Int)).thenReturn(detailShow)
 
         detailViewModel.detailShow.observeForever(showObserver)
         verify(showObserver).onChanged(dummyDetailShow)
