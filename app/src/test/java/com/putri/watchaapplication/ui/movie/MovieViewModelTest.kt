@@ -49,8 +49,10 @@ class MovieViewModelTest {
         movies.value = dummyMovie
 
         `when`(watchaRepository.getPopularMovie()).thenReturn(movies)
+
         val movieEntities = movieViewModel.getMovies().value?.data
         verify(watchaRepository).getPopularMovie()
+
         assertNotNull(movieEntities)
         assertEquals(3, movieEntities?.size)
 
